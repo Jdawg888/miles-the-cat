@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hi, I'm Miles!</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap');
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background-color: #fff8f0;
+      color: #2e2e2e;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 24px 16px 48px;
+    }
+
+    .card {
+      max-width: 420px;
+      width: 100%;
+      background: #ffffff;
+      border-radius: 28px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.10);
+      overflow: hidden;
+    }
+
+    /* Header band */
+    .header-band {
+      background: linear-gradient(135deg, #f97316, #fb923c);
+      padding: 28px 24px 20px;
+      text-align: center;
+      position: relative;
+    }
+
+    .header-band h1 {
+      font-size: 2.4rem;
+      font-weight: 900;
+      color: #fff;
+      letter-spacing: -0.5px;
+      line-height: 1.1;
+    }
+
+    .header-band .subtitle {
+      font-size: 1rem;
+      color: rgba(255,255,255,0.85);
+      margin-top: 4px;
+      font-weight: 700;
+    }
+
+    /* Paw prints decoration */
+    .paw-row {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      padding: 6px 0 0;
+      font-size: 1.1rem;
+      opacity: 0.7;
+    }
+
+    /* Photo area */
+    .photo-wrap {
+      padding: 24px 24px 16px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .photo-circle {
+      width: 160px;
+      height: 160px;
+      border-radius: 50%;
+      border: 5px solid #f97316;
+      overflow: hidden;
+      background: #fff3e8;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .photo-circle img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: none; /* hide until src is set */
+    }
+
+    .photo-placeholder {
+      text-align: center;
+      padding: 12px;
+    }
+
+    .photo-placeholder .cat-icon {
+      font-size: 4rem;
+      line-height: 1;
+    }
+
+    .photo-placeholder p {
+      font-size: 0.65rem;
+      color: #aaa;
+      margin-top: 6px;
+      font-weight: 700;
+    }
+
+    /* Info blocks */
+    .info-section {
+      padding: 0 20px 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .info-card {
+      border-radius: 16px;
+      padding: 16px 18px;
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+    }
+
+    .info-card.orange {
+      background: #fff3e8;
+      border: 2px solid #fed7aa;
+    }
+
+    .info-card.red {
+      background: #fff1f1;
+      border: 2px solid #fecaca;
+    }
+
+    .info-card.green {
+      background: #f0fdf4;
+      border: 2px solid #bbf7d0;
+    }
+
+    .info-card .icon {
+      font-size: 1.8rem;
+      flex-shrink: 0;
+      line-height: 1;
+      margin-top: 2px;
+    }
+
+    .info-card .text h2 {
+      font-size: 1rem;
+      font-weight: 900;
+      margin-bottom: 3px;
+    }
+
+    .info-card.orange .text h2 { color: #c2410c; }
+    .info-card.red .text h2    { color: #b91c1c; }
+    .info-card.green .text h2  { color: #15803d; }
+
+    .info-card .text p {
+      font-size: 0.88rem;
+      font-weight: 400;
+      line-height: 1.4;
+      color: #555;
+    }
+
+    /* Footer */
+    .footer {
+      background: #f97316;
+      text-align: center;
+      padding: 14px;
+    }
+
+    .footer p {
+      color: #fff;
+      font-size: 0.85rem;
+      font-weight: 700;
+    }
+
+    /* Replace placeholder with photo instructions (for owner) */
+    /* To add a photo: set the img src below and remove display:none */
+  </style>
+</head>
+<body>
+  <div class="card">
+
+    <!-- Header -->
+    <div class="header-band">
+      <h1>Hi, I'm Miles!</h1>
+      <p class="subtitle">I'm a local outdoor cat</p>
+      <div class="paw-row">
+        <span>&#128062;</span>
+        <span>&#128062;</span>
+        <span>&#128062;</span>
+      </div>
+    </div>
+
+    <!-- Photo -->
+    <div class="photo-wrap">
+      <div class="photo-circle">
+        <img src="miles.jpg" alt="Miles the cat" style="display:block" />
+      </div>
+    </div>
+
+    <!-- Info cards -->
+    <div class="info-section">
+
+      <div class="info-card orange">
+        <div class="icon">&#127968;</div>
+        <div class="text">
+          <h2>I live in Darlinghurst</h2>
+          <p>I'm an outdoor cat — this is my neighbourhood and I roam freely. I have a home and I know my way back.</p>
+        </div>
+      </div>
+
+      <div class="info-card red">
+        <div class="icon">&#128683;</div>
+        <div class="text">
+          <h2>Please don't feed me</h2>
+          <p>I'm on a specific diet at home. Feeding me extra food causes problems for my health. Thank you for understanding!</p>
+        </div>
+      </div>
+
+      <div class="info-card green">
+        <div class="icon">&#10024;</div>
+        <div class="text">
+          <h2>No need to rescue me</h2>
+          <p>I'm healthy and happy. There's no need to take me to a vet or shelter — I'm exactly where I'm supposed to be.</p>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      <p>Thanks for looking out for me &#128149;</p>
+    </div>
+
+  </div>
+</body>
+</html>
