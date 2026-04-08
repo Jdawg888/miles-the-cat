@@ -389,7 +389,7 @@
       <form id="sighting-form" action="https://api.web3forms.com/submit" method="POST" enctype="multipart/form-data">
 
         <!-- Web3Forms access key — replace YOUR_WEB3FORMS_KEY with the key from web3forms.com -->
-        <input type="hidden" name="access_key" value="a88f7421-2378-42fe-9931-4dbea54167fb" />
+        <input type="hidden" name="access_key" value="YOUR_WEB3FORMS_KEY" />
         <input type="hidden" name="subject" value="Miles sighting!" />
         <input type="hidden" name="from_name" value="Miles the Cat Website" />
         <input type="hidden" name="redirect" value="false" />
@@ -407,7 +407,7 @@
         <div class="form-group">
           <label>Photo (optional)</label>
           <div class="upload-area" id="upload-area">
-            <input type="file" name="photo" id="photo-input" accept="image/*" capture="environment" />
+            <input type="file" name="photo" id="photo-input" accept="image/*" />
             <div class="upload-icon">&#128247;</div>
             <p>Tap to take a photo or <span>choose from library</span></p>
           </div>
@@ -446,13 +446,9 @@
     photoInput.addEventListener('change', () => {
       const file = photoInput.files[0];
       if (!file) return;
-      const reader = new FileReader();
-      reader.onload = e => {
-        previewImg.src = e.target.result;
-        previewWrap.style.display = 'block';
-        uploadArea.style.display  = 'none';
-      };
-      reader.readAsDataURL(file);
+      previewImg.src = URL.createObjectURL(file);
+      previewWrap.style.display = 'block';
+      uploadArea.style.display  = 'none';
     });
 
     removeBtn.addEventListener('click', () => {
