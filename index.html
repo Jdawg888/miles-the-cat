@@ -475,6 +475,16 @@
       msgSuccess.style.display = 'none';
       msgError.style.display   = 'none';
 
+      // File size guard (5MB Web3Forms limit)
+      const photo = photoInput.files[0];
+      if (photo && photo.size > 5 * 1024 * 1024) {
+        msgError.textContent   = 'Photo is too large (max 5MB). Try a smaller image.';
+        msgError.style.display = 'block';
+        submitBtn.disabled     = false;
+        submitBtn.textContent  = 'Send sighting';
+        return;
+      }
+
       try {
         const data = new FormData(form);
         const res  = await fetch('https://api.web3forms.com/submit', { method: 'POST', body: data });
@@ -490,6 +500,10 @@
           throw new Error(json.message || 'Submission failed');
         }
       } catch (err) {
+        const isKeyError = err.message && err.message.toLowerCase().includes('access key');
+        msgError.textContent   = isKeyError
+          ? 'This form isn\'t activated yet. The owner needs to add their Web3Forms key.'
+          : ('Error: ' + (err.message || 'Something went wrong. Please try again.'));
         msgError.style.display = 'block';
         submitBtn.textContent  = 'Send sighting';
       } finally {
