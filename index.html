@@ -326,6 +326,149 @@
       font-size: 0.85rem;
       font-weight: 700;
     }
+
+    /* ── Gallery ───────────────────────────────── */
+    .gallery-section {
+      padding: 0 20px 28px;
+    }
+
+    .gallery-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+    }
+
+    .gallery-header h3 {
+      font-size: 1.1rem;
+      font-weight: 900;
+      color: #c2410c;
+    }
+
+    .gallery-count {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #aaa;
+    }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 4px;
+    }
+
+    .gallery-cell {
+      position: relative;
+      aspect-ratio: 1;
+      overflow: hidden;
+      border-radius: 6px;
+      cursor: pointer;
+      background: #fff3e8;
+    }
+
+    .gallery-cell img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.25s ease;
+    }
+
+    .gallery-cell:hover img {
+      transform: scale(1.06);
+    }
+
+    .gallery-cell .cell-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.55) 0%, transparent 55%);
+      opacity: 0;
+      transition: opacity 0.2s;
+      display: flex;
+      align-items: flex-end;
+      padding: 6px;
+    }
+
+    .gallery-cell:hover .cell-overlay {
+      opacity: 1;
+    }
+
+    .gallery-cell .cell-date {
+      font-size: 0.65rem;
+      font-weight: 700;
+      color: #fff;
+      line-height: 1.2;
+    }
+
+    .gallery-empty {
+      text-align: center;
+      padding: 24px 0;
+      color: #ccc;
+      font-size: 0.85rem;
+      font-weight: 700;
+    }
+
+    .gallery-empty .empty-icon {
+      font-size: 2rem;
+      margin-bottom: 6px;
+    }
+
+    /* ── Lightbox ──────────────────────────────── */
+    .lightbox {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.88);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .lightbox.open {
+      display: flex;
+    }
+
+    .lightbox-inner {
+      position: relative;
+      max-width: 480px;
+      width: 100%;
+    }
+
+    .lightbox-inner img {
+      width: 100%;
+      max-height: 80vh;
+      object-fit: contain;
+      border-radius: 12px;
+      display: block;
+    }
+
+    .lightbox-close {
+      position: absolute;
+      top: -14px;
+      right: -14px;
+      width: 34px;
+      height: 34px;
+      background: #fff;
+      border: none;
+      border-radius: 50%;
+      font-size: 1.1rem;
+      font-weight: 900;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+      color: #2e2e2e;
+    }
+
+    .lightbox-caption {
+      margin-top: 10px;
+      text-align: center;
+      color: rgba(255,255,255,0.8);
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
   </style>
 </head>
 <body>
@@ -431,6 +574,21 @@
       </form>
     </div>
 
+    <!-- Sightings gallery -->
+    <hr class="divider" />
+    <div class="gallery-section">
+      <div class="gallery-header">
+        <h3>&#128247; Miles sightings</h3>
+        <span class="gallery-count" id="gallery-count"></span>
+      </div>
+      <div class="gallery-grid" id="gallery-grid">
+        <div class="gallery-empty">
+          <div class="empty-icon">&#128062;</div>
+          <p>No sightings yet — be the first!</p>
+        </div>
+      </div>
+    </div>
+
     <!-- Footer -->
     <div class="footer">
       <p>Thanks for looking out for me &#128149;</p>
@@ -438,8 +596,21 @@
 
   </div>
 
+  <!-- Lightbox -->
+  <div class="lightbox" id="lightbox">
+    <div class="lightbox-inner">
+      <button class="lightbox-close" id="lightbox-close">&#215;</button>
+      <img id="lightbox-img" src="" alt="Sighting" />
+      <p class="lightbox-caption" id="lightbox-caption"></p>
+    </div>
+  </div>
+
   <script>
-    // Photo preview
+    const CLOUDINARY_CLOUD  = 'dmzmchp5y';
+    const CLOUDINARY_PRESET = 'Miles_sightings';
+    const CLOUDINARY_TAG    = 'miles_sightings';
+
+    // ── Photo preview ───────────────────────────
     const photoInput  = document.getElementById('photo-input');
     const previewWrap = document.getElementById('preview-wrap');
     const previewImg  = document.getElementById('preview-img');
@@ -460,12 +631,71 @@
       uploadArea.style.display  = 'block';
     });
 
-    // Drag-and-drop highlight
     uploadArea.addEventListener('dragover',  e => { e.preventDefault(); uploadArea.classList.add('drag-over'); });
     uploadArea.addEventListener('dragleave', () => uploadArea.classList.remove('drag-over'));
     uploadArea.addEventListener('drop',      () => uploadArea.classList.remove('drag-over'));
 
-    // Form submission via fetch (no page redirect)
+    // ── Gallery ─────────────────────────────────
+    const galleryGrid  = document.getElementById('gallery-grid');
+    const galleryCount = document.getElementById('gallery-count');
+
+    function thumbUrl(publicId) {
+      return `https://res.cloudinary.com/${CLOUDINARY_CLOUD}/image/upload/c_fill,w_400,h_400,q_auto,f_auto/${publicId}`;
+    }
+
+    function fullUrl(publicId) {
+      return `https://res.cloudinary.com/${CLOUDINARY_CLOUD}/image/upload/q_auto,f_auto/${publicId}`;
+    }
+
+    function formatDate(iso) {
+      const d = new Date(iso);
+      return d.toLocaleDateString('en-AU', { day: 'numeric', month: 'short', year: 'numeric' });
+    }
+
+    async function loadGallery() {
+      try {
+        const res  = await fetch(`https://res.cloudinary.com/${CLOUDINARY_CLOUD}/image/list/${CLOUDINARY_TAG}.json`);
+        if (!res.ok) return; // silently skip if endpoint not enabled
+        const json = await res.json();
+        const resources = (json.resources || []).sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+
+        if (resources.length === 0) return;
+
+        galleryCount.textContent = `${resources.length} sighting${resources.length === 1 ? '' : 's'}`;
+        galleryGrid.innerHTML = resources.map((r, i) => `
+          <div class="gallery-cell" data-index="${i}" data-public-id="${r.public_id}" data-date="${r.created_at}">
+            <img src="${thumbUrl(r.public_id)}" alt="Miles sighting" loading="lazy" />
+            <div class="cell-overlay">
+              <span class="cell-date">${formatDate(r.created_at)}</span>
+            </div>
+          </div>
+        `).join('');
+
+        galleryGrid.querySelectorAll('.gallery-cell').forEach(cell => {
+          cell.addEventListener('click', () => openLightbox(cell.dataset.publicId, cell.dataset.date));
+        });
+      } catch (e) {
+        // fail silently — gallery just won't show
+      }
+    }
+
+    // ── Lightbox ────────────────────────────────
+    const lightbox        = document.getElementById('lightbox');
+    const lightboxImg     = document.getElementById('lightbox-img');
+    const lightboxCaption = document.getElementById('lightbox-caption');
+    const lightboxClose   = document.getElementById('lightbox-close');
+
+    function openLightbox(publicId, date) {
+      lightboxImg.src         = fullUrl(publicId);
+      lightboxCaption.textContent = formatDate(date);
+      lightbox.classList.add('open');
+    }
+
+    lightboxClose.addEventListener('click', () => lightbox.classList.remove('open'));
+    lightbox.addEventListener('click', e => { if (e.target === lightbox) lightbox.classList.remove('open'); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') lightbox.classList.remove('open'); });
+
+    // ── Form submission ──────────────────────────
     const form       = document.getElementById('sighting-form');
     const submitBtn  = document.getElementById('submit-btn');
     const msgSuccess = document.getElementById('msg-success');
@@ -473,17 +703,13 @@
 
     form.addEventListener('submit', async e => {
       e.preventDefault();
-      submitBtn.disabled    = true;
-      submitBtn.textContent = 'Sending...';
+      submitBtn.disabled       = true;
+      submitBtn.textContent    = 'Sending...';
       msgSuccess.style.display = 'none';
       msgError.style.display   = 'none';
 
-      const CLOUDINARY_CLOUD  = 'dmzmchp5y';
-      const CLOUDINARY_PRESET = 'Miles_sightings';
-
       const photo = photoInput.files[0];
 
-      // File size guard (10MB)
       if (photo && photo.size > 10 * 1024 * 1024) {
         msgError.textContent   = 'Photo is too large (max 10MB). Try a smaller image.';
         msgError.style.display = 'block';
@@ -493,24 +719,19 @@
       }
 
       try {
-        // Step 1: upload photo to Cloudinary if one was selected
         if (photo) {
           submitBtn.textContent = 'Uploading photo...';
           const cloudData = new FormData();
           cloudData.append('file', photo);
           cloudData.append('upload_preset', CLOUDINARY_PRESET);
+          cloudData.append('tags', CLOUDINARY_TAG);
 
-          const cloudRes  = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD}/image/upload`, {
-            method: 'POST',
-            body: cloudData
-          });
+          const cloudRes  = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD}/image/upload`, { method: 'POST', body: cloudData });
           const cloudJson = await cloudRes.json();
-
           if (!cloudJson.secure_url) throw new Error(cloudJson.error?.message || 'Photo upload failed');
           document.getElementById('photo-url-field').value = cloudJson.secure_url;
         }
 
-        // Step 2: submit form data (with photo URL as text) to Web3Forms
         submitBtn.textContent = 'Sending...';
         const data = new FormData(form);
         const res  = await fetch('https://api.web3forms.com/submit', { method: 'POST', body: data });
@@ -522,7 +743,9 @@
           document.getElementById('photo-url-field').value = '';
           previewWrap.style.display = 'none';
           uploadArea.style.display  = 'block';
-          submitBtn.textContent = 'Sent!';
+          submitBtn.textContent     = 'Sent!';
+          // Refresh gallery after a short delay (Cloudinary indexing)
+          setTimeout(loadGallery, 2500);
         } else {
           throw new Error(json.message || 'Submission failed');
         }
@@ -534,6 +757,9 @@
         submitBtn.disabled = false;
       }
     });
+
+    // Load gallery on page load
+    loadGallery();
   </script>
 </body>
 </html>
