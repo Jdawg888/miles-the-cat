@@ -38,7 +38,6 @@
       background: linear-gradient(135deg, #f97316, #fb923c);
       padding: 28px 24px 20px;
       text-align: center;
-      position: relative;
     }
 
     .header-band h1 {
@@ -56,7 +55,6 @@
       font-weight: 700;
     }
 
-    /* Paw prints decoration */
     .paw-row {
       display: flex;
       justify-content: center;
@@ -66,7 +64,7 @@
       opacity: 0.7;
     }
 
-    /* Photo area */
+    /* Photo */
     .photo-wrap {
       padding: 24px 24px 16px;
       display: flex;
@@ -81,37 +79,17 @@
       overflow: hidden;
       background: #fff3e8;
       display: flex;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
-      position: relative;
     }
 
     .photo-circle img {
       width: 100%;
       height: 100%;
       object-fit: cover;
-      display: none; /* hide until src is set */
     }
 
-    .photo-placeholder {
-      text-align: center;
-      padding: 12px;
-    }
-
-    .photo-placeholder .cat-icon {
-      font-size: 4rem;
-      line-height: 1;
-    }
-
-    .photo-placeholder p {
-      font-size: 0.65rem;
-      color: #aaa;
-      margin-top: 6px;
-      font-weight: 700;
-    }
-
-    /* Info blocks */
+    /* Info cards */
     .info-section {
       padding: 0 20px 24px;
       display: flex;
@@ -127,20 +105,10 @@
       gap: 14px;
     }
 
-    .info-card.orange {
-      background: #fff3e8;
-      border: 2px solid #fed7aa;
-    }
-
-    .info-card.red {
-      background: #fff1f1;
-      border: 2px solid #fecaca;
-    }
-
-    .info-card.green {
-      background: #f0fdf4;
-      border: 2px solid #bbf7d0;
-    }
+    .info-card.orange { background: #fff3e8; border: 2px solid #fed7aa; }
+    .info-card.red    { background: #fff1f1; border: 2px solid #fecaca; }
+    .info-card.green  { background: #f0fdf4; border: 2px solid #bbf7d0; }
+    .info-card.purple { background: #faf5ff; border: 2px solid #e9d5ff; }
 
     .info-card .icon {
       font-size: 1.8rem;
@@ -158,12 +126,192 @@
     .info-card.orange .text h2 { color: #c2410c; }
     .info-card.red .text h2    { color: #b91c1c; }
     .info-card.green .text h2  { color: #15803d; }
+    .info-card.purple .text h2 { color: #7c3aed; }
 
     .info-card .text p {
       font-size: 0.88rem;
       font-weight: 400;
       line-height: 1.4;
       color: #555;
+    }
+
+    /* Divider */
+    .divider {
+      margin: 4px 20px 20px;
+      border: none;
+      border-top: 2px dashed #ffe0c8;
+    }
+
+    /* Sighting form section */
+    .sighting-section {
+      padding: 0 20px 28px;
+    }
+
+    .sighting-section h3 {
+      font-size: 1.1rem;
+      font-weight: 900;
+      color: #c2410c;
+      margin-bottom: 4px;
+      text-align: center;
+    }
+
+    .sighting-section .sighting-sub {
+      font-size: 0.82rem;
+      color: #888;
+      text-align: center;
+      margin-bottom: 16px;
+    }
+
+    .form-group {
+      margin-bottom: 12px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: #555;
+      margin-bottom: 5px;
+    }
+
+    .form-group input[type="text"],
+    .form-group textarea {
+      width: 100%;
+      border: 2px solid #fed7aa;
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 0.9rem;
+      color: #2e2e2e;
+      background: #fff;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .form-group input[type="text"]:focus,
+    .form-group textarea:focus {
+      border-color: #f97316;
+    }
+
+    .form-group textarea {
+      resize: none;
+      height: 72px;
+    }
+
+    /* File upload area */
+    .upload-area {
+      border: 2px dashed #fed7aa;
+      border-radius: 12px;
+      padding: 20px 12px;
+      text-align: center;
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+      background: #fff9f5;
+      position: relative;
+    }
+
+    .upload-area:hover,
+    .upload-area.drag-over {
+      border-color: #f97316;
+      background: #fff3e8;
+    }
+
+    .upload-area input[type="file"] {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+      width: 100%;
+      height: 100%;
+    }
+
+    .upload-area .upload-icon { font-size: 2rem; margin-bottom: 6px; }
+
+    .upload-area p {
+      font-size: 0.82rem;
+      color: #888;
+      font-weight: 700;
+    }
+
+    .upload-area p span {
+      color: #f97316;
+    }
+
+    /* Preview */
+    #preview-wrap {
+      display: none;
+      margin-top: 10px;
+      position: relative;
+      text-align: center;
+    }
+
+    #preview-wrap img {
+      max-height: 180px;
+      border-radius: 10px;
+      border: 2px solid #fed7aa;
+      object-fit: cover;
+      max-width: 100%;
+    }
+
+    #remove-photo {
+      position: absolute;
+      top: 6px;
+      right: 6px;
+      background: rgba(0,0,0,0.55);
+      color: #fff;
+      border: none;
+      border-radius: 50%;
+      width: 26px;
+      height: 26px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 900;
+    }
+
+    /* Submit button */
+    .submit-btn {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, #f97316, #fb923c);
+      color: #fff;
+      border: none;
+      border-radius: 14px;
+      font-family: 'Nunito', sans-serif;
+      font-size: 1rem;
+      font-weight: 900;
+      cursor: pointer;
+      margin-top: 14px;
+      transition: opacity 0.2s, transform 0.1s;
+    }
+
+    .submit-btn:hover  { opacity: 0.92; }
+    .submit-btn:active { transform: scale(0.98); }
+    .submit-btn:disabled { opacity: 0.55; cursor: not-allowed; }
+
+    /* Status messages */
+    .status-msg {
+      display: none;
+      margin-top: 12px;
+      padding: 12px 14px;
+      border-radius: 10px;
+      font-size: 0.88rem;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .status-msg.success {
+      background: #f0fdf4;
+      border: 2px solid #bbf7d0;
+      color: #15803d;
+    }
+
+    .status-msg.error {
+      background: #fff1f1;
+      border: 2px solid #fecaca;
+      color: #b91c1c;
     }
 
     /* Footer */
@@ -178,9 +326,6 @@
       font-size: 0.85rem;
       font-weight: 700;
     }
-
-    /* Replace placeholder with photo instructions (for owner) */
-    /* To add a photo: set the img src below and remove display:none */
   </style>
 </head>
 <body>
@@ -200,7 +345,7 @@
     <!-- Photo -->
     <div class="photo-wrap">
       <div class="photo-circle">
-        <img src="miles.jpg" alt="Miles the cat" style="display:block" />
+        <img src="miles.jpg" alt="Miles the cat" />
       </div>
     </div>
 
@@ -233,11 +378,128 @@
 
     </div>
 
+    <!-- Divider -->
+    <hr class="divider" />
+
+    <!-- Sighting form -->
+    <div class="sighting-section">
+      <h3>&#128247; Spotted Miles?</h3>
+      <p class="sighting-sub">Send a photo to his owner — they'd love to see where he's been!</p>
+
+      <form id="sighting-form" action="https://api.web3forms.com/submit" method="POST" enctype="multipart/form-data">
+
+        <!-- Web3Forms access key — replace YOUR_WEB3FORMS_KEY with the key from web3forms.com -->
+        <input type="hidden" name="access_key" value="YOUR_WEB3FORMS_KEY" />
+        <input type="hidden" name="subject" value="Miles sighting!" />
+        <input type="hidden" name="from_name" value="Miles the Cat Website" />
+        <input type="hidden" name="redirect" value="false" />
+
+        <div class="form-group">
+          <label for="location">Where did you spot him?</label>
+          <input type="text" id="location" name="location" placeholder="e.g. Taylor Square, outside the bakery..." />
+        </div>
+
+        <div class="form-group">
+          <label for="note">Anything to add? (optional)</label>
+          <textarea id="note" name="note" placeholder="e.g. He seemed happy and was sunbathing!"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Photo (optional)</label>
+          <div class="upload-area" id="upload-area">
+            <input type="file" name="photo" id="photo-input" accept="image/*" capture="environment" />
+            <div class="upload-icon">&#128247;</div>
+            <p>Tap to take a photo or <span>choose from library</span></p>
+          </div>
+          <div id="preview-wrap">
+            <img id="preview-img" src="" alt="Preview" />
+            <button type="button" id="remove-photo">&#215;</button>
+          </div>
+        </div>
+
+        <button type="submit" class="submit-btn" id="submit-btn">Send sighting</button>
+
+        <div class="status-msg success" id="msg-success">
+          Thanks! Miles' owner has been notified &#128149;
+        </div>
+        <div class="status-msg error" id="msg-error">
+          Something went wrong. Please try again.
+        </div>
+      </form>
+    </div>
+
     <!-- Footer -->
     <div class="footer">
       <p>Thanks for looking out for me &#128149;</p>
     </div>
 
   </div>
+
+  <script>
+    // Photo preview
+    const photoInput  = document.getElementById('photo-input');
+    const previewWrap = document.getElementById('preview-wrap');
+    const previewImg  = document.getElementById('preview-img');
+    const removeBtn   = document.getElementById('remove-photo');
+    const uploadArea  = document.getElementById('upload-area');
+
+    photoInput.addEventListener('change', () => {
+      const file = photoInput.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = e => {
+        previewImg.src = e.target.result;
+        previewWrap.style.display = 'block';
+        uploadArea.style.display  = 'none';
+      };
+      reader.readAsDataURL(file);
+    });
+
+    removeBtn.addEventListener('click', () => {
+      photoInput.value  = '';
+      previewWrap.style.display = 'none';
+      uploadArea.style.display  = 'block';
+    });
+
+    // Drag-and-drop highlight
+    uploadArea.addEventListener('dragover',  e => { e.preventDefault(); uploadArea.classList.add('drag-over'); });
+    uploadArea.addEventListener('dragleave', () => uploadArea.classList.remove('drag-over'));
+    uploadArea.addEventListener('drop',      () => uploadArea.classList.remove('drag-over'));
+
+    // Form submission via fetch (no page redirect)
+    const form       = document.getElementById('sighting-form');
+    const submitBtn  = document.getElementById('submit-btn');
+    const msgSuccess = document.getElementById('msg-success');
+    const msgError   = document.getElementById('msg-error');
+
+    form.addEventListener('submit', async e => {
+      e.preventDefault();
+      submitBtn.disabled    = true;
+      submitBtn.textContent = 'Sending...';
+      msgSuccess.style.display = 'none';
+      msgError.style.display   = 'none';
+
+      try {
+        const data = new FormData(form);
+        const res  = await fetch('https://api.web3forms.com/submit', { method: 'POST', body: data });
+        const json = await res.json();
+
+        if (json.success) {
+          msgSuccess.style.display = 'block';
+          form.reset();
+          previewWrap.style.display = 'none';
+          uploadArea.style.display  = 'block';
+          submitBtn.textContent = 'Sent!';
+        } else {
+          throw new Error(json.message || 'Submission failed');
+        }
+      } catch (err) {
+        msgError.style.display = 'block';
+        submitBtn.textContent  = 'Send sighting';
+      } finally {
+        submitBtn.disabled = false;
+      }
+    });
+  </script>
 </body>
 </html>
