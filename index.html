@@ -388,11 +388,13 @@
 
       <form id="sighting-form" action="https://api.web3forms.com/submit" method="POST" enctype="multipart/form-data">
 
-        <!-- Web3Forms access key — replace YOUR_WEB3FORMS_KEY with the key from web3forms.com -->
+        <!-- Web3Forms config -->
         <input type="hidden" name="access_key" value="a88f7421-2378-42fe-9931-4dbea54167fb" />
         <input type="hidden" name="subject" value="Miles sighting!" />
         <input type="hidden" name="from_name" value="Miles the Cat Website" />
         <input type="hidden" name="redirect" value="false" />
+        <!-- Photo URL injected here by JS after Cloudinary upload -->
+        <input type="hidden" name="photo_url" id="photo-url-field" value="" />
 
         <div class="form-group">
           <label for="location">Where did you spot him?</label>
@@ -407,7 +409,8 @@
         <div class="form-group">
           <label>Photo (optional)</label>
           <div class="upload-area" id="upload-area">
-            <input type="file" name="photo" id="photo-input" accept="image/*" />
+            <!-- no name= so this file is NOT sent to Web3Forms directly -->
+            <input type="file" id="photo-input" accept="image/*" />
             <div class="upload-icon">&#128247;</div>
             <p>Tap to take a photo or <span>choose from library</span></p>
           </div>
@@ -475,10 +478,14 @@
       msgSuccess.style.display = 'none';
       msgError.style.display   = 'none';
 
-      // File size guard (5MB Web3Forms limit)
+      const CLOUDINARY_CLOUD  = 'dmzmchp5y';
+      const CLOUDINARY_PRESET = 'Miles_sightings';
+
       const photo = photoInput.files[0];
-      if (photo && photo.size > 5 * 1024 * 1024) {
-        msgError.textContent   = 'Photo is too large (max 5MB). Try a smaller image.';
+
+      // File size guard (10MB)
+      if (photo && photo.size > 10 * 1024 * 1024) {
+        msgError.textContent   = 'Photo is too large (max 10MB). Try a smaller image.';
         msgError.style.display = 'block';
         submitBtn.disabled     = false;
         submitBtn.textContent  = 'Send sighting';
@@ -486,6 +493,25 @@
       }
 
       try {
+        // Step 1: upload photo to Cloudinary if one was selected
+        if (photo) {
+          submitBtn.textContent = 'Uploading photo...';
+          const cloudData = new FormData();
+          cloudData.append('file', photo);
+          cloudData.append('upload_preset', CLOUDINARY_PRESET);
+
+          const cloudRes  = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD}/image/upload`, {
+            method: 'POST',
+            body: cloudData
+          });
+          const cloudJson = await cloudRes.json();
+
+          if (!cloudJson.secure_url) throw new Error(cloudJson.error?.message || 'Photo upload failed');
+          document.getElementById('photo-url-field').value = cloudJson.secure_url;
+        }
+
+        // Step 2: submit form data (with photo URL as text) to Web3Forms
+        submitBtn.textContent = 'Sending...';
         const data = new FormData(form);
         const res  = await fetch('https://api.web3forms.com/submit', { method: 'POST', body: data });
         const json = await res.json();
@@ -493,6 +519,7 @@
         if (json.success) {
           msgSuccess.style.display = 'block';
           form.reset();
+          document.getElementById('photo-url-field').value = '';
           previewWrap.style.display = 'none';
           uploadArea.style.display  = 'block';
           submitBtn.textContent = 'Sent!';
@@ -500,10 +527,7 @@
           throw new Error(json.message || 'Submission failed');
         }
       } catch (err) {
-        const isKeyError = err.message && err.message.toLowerCase().includes('access key');
-        msgError.textContent   = isKeyError
-          ? 'This form isn\'t activated yet. The owner needs to add their Web3Forms key.'
-          : ('Error: ' + (err.message || 'Something went wrong. Please try again.'));
+        msgError.textContent   = 'Error: ' + (err.message || 'Something went wrong. Please try again.');
         msgError.style.display = 'block';
         submitBtn.textContent  = 'Send sighting';
       } finally {
