@@ -734,7 +734,9 @@
         }
 
         submitBtn.textContent = 'Sending...';
+        photoInput.disabled = true;
         const data = new FormData(form);
+        photoInput.disabled = false;
         const res  = await fetch('https://api.web3forms.com/submit', { method: 'POST', body: data });
         const json = await res.json();
 
