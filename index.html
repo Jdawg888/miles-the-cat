@@ -327,6 +327,13 @@
       font-weight: 700;
     }
 
+    .footer .visitor-count {
+      font-size: 0.75rem;
+      font-weight: 400;
+      opacity: 0.85;
+      margin-top: 8px;
+    }
+
     /* ── Gallery ───────────────────────────────── */
     .gallery-section {
       padding: 0 20px 28px;
@@ -593,6 +600,7 @@
     <div class="footer">
       <p>Thanks for looking out for me.</p>
       <p>P.S. I can be a bit nosy, don't let me in to your building if you don't want me to enter. I won't be offended!</p>
+      <p class="visitor-count" id="visitor-count"></p>
     </div>
 
   </div>
@@ -763,6 +771,20 @@
 
     // Load gallery on page load
     loadGallery();
+
+    // Visitor counter
+    (async function () {
+      try {
+        const res  = await fetch('https://api.counterapi.dev/v1/miles-the-cat/views/up');
+        const data = await res.json();
+        const el   = document.getElementById('visitor-count');
+        if (el && data.count) {
+          el.textContent = `👀 ${Number(data.count).toLocaleString()} visitors`;
+        }
+      } catch (e) {
+        // Fail silently — counter is optional
+      }
+    })();
   </script>
 </body>
 </html>
