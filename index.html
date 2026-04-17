@@ -842,13 +842,14 @@
     (async function () {
       try {
         const res  = await fetch('https://api.counterapi.dev/v1/miles-the-cat/views/up');
+        if (!res.ok) throw new Error(`Counter API returned ${res.status}`);
         const data = await res.json();
         const el   = document.getElementById('visitor-count');
-        if (el && data.count) {
+        if (el && data.count != null) {
           el.textContent = `👀 ${Number(data.count).toLocaleString()} visitors`;
         }
       } catch (e) {
-        // Fail silently — counter is optional
+        console.warn('Visitor counter:', e.message);
       }
     })();
   </script>
