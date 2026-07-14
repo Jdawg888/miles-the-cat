@@ -5,8 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Hi, I'm Miles!</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap');
-
     * {
       box-sizing: border-box;
       margin: 0;
@@ -14,7 +12,7 @@
     }
 
     body {
-      font-family: 'Nunito', sans-serif;
+      font-family: Helvetica, Arial, sans-serif;
       background-color: #fff8f0;
       color: #2e2e2e;
       min-height: 100vh;
@@ -64,6 +62,58 @@
       opacity: 0.7;
     }
 
+    /* Lost mode banner */
+    .lost-banner {
+      display: none;
+      margin: 20px 20px 0;
+      background: #fff1f1;
+      border: 2px solid #fecaca;
+      border-radius: 16px;
+      padding: 18px;
+      text-align: center;
+    }
+
+    .lost-banner h2 {
+      font-size: 1.1rem;
+      font-weight: 900;
+      color: #b91c1c;
+      margin-bottom: 6px;
+    }
+
+    .lost-banner p {
+      font-size: 0.86rem;
+      color: #555;
+      line-height: 1.4;
+      margin-bottom: 14px;
+    }
+
+    .lost-contacts {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .lost-contact-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: #dc2626;
+      color: #fff;
+      text-decoration: none;
+      padding: 10px 18px;
+      border-radius: 12px;
+      font-weight: 900;
+      font-size: 0.86rem;
+      min-width: 130px;
+    }
+
+    .lost-contact-btn span {
+      font-weight: 700;
+      font-size: 0.8rem;
+      margin-top: 2px;
+    }
+
     /* Photo */
     .photo-wrap {
       padding: 24px 24px 16px;
@@ -106,9 +156,6 @@
     }
 
     .info-card.orange { background: #fff3e8; border: 2px solid #fed7aa; }
-    .info-card.red    { background: #fff1f1; border: 2px solid #fecaca; }
-    .info-card.green  { background: #f0fdf4; border: 2px solid #bbf7d0; }
-    .info-card.purple { background: #faf5ff; border: 2px solid #e9d5ff; }
 
     .info-card .icon {
       font-size: 1.8rem;
@@ -124,9 +171,6 @@
     }
 
     .info-card.orange .text h2 { color: #c2410c; }
-    .info-card.red .text h2    { color: #b91c1c; }
-    .info-card.green .text h2  { color: #15803d; }
-    .info-card.purple .text h2 { color: #7c3aed; }
 
     .info-card .text p {
       font-size: 0.88rem;
@@ -180,7 +224,7 @@
       border: 2px solid #fed7aa;
       border-radius: 10px;
       padding: 10px 12px;
-      font-family: 'Nunito', sans-serif;
+      font-family: Helvetica, Arial, sans-serif;
       font-size: 0.9rem;
       color: #2e2e2e;
       background: #fff;
@@ -279,7 +323,7 @@
       color: #fff;
       border: none;
       border-radius: 14px;
-      font-family: 'Nunito', sans-serif;
+      font-family: Helvetica, Arial, sans-serif;
       font-size: 1rem;
       font-weight: 900;
       cursor: pointer;
@@ -523,6 +567,16 @@
       </div>
     </div>
 
+    <!-- Lost mode banner -->
+    <div class="lost-banner" id="lost-banner">
+      <h2>We haven't seen Miles in a few days</h2>
+      <p>If you see Miles, please get in touch right away.</p>
+      <div class="lost-contacts">
+        <a href="sms:+61432911196" class="lost-contact-btn">Joyce<span>0432 911 196</span></a>
+        <a href="sms:+61411430550" class="lost-contact-btn">Hayden<span>0411 430 550</span></a>
+      </div>
+    </div>
+
     <!-- Photo -->
     <div class="photo-wrap">
       <div class="photo-circle">
@@ -541,7 +595,7 @@
         </div>
       </div>
 
-      <div class="info-card red">
+      <div class="info-card orange">
         <div class="icon">&#128683;</div>
         <div class="text">
           <h2>Please don't feed me</h2>
@@ -549,7 +603,7 @@
         </div>
       </div>
 
-      <div class="info-card green">
+      <div class="info-card orange">
         <div class="icon">&#10024;</div>
         <div class="text">
           <h2>No need to rescue me</h2>
@@ -651,6 +705,23 @@
     const CLOUDINARY_CLOUD  = 'dmzmchp5y';
     const CLOUDINARY_PRESET = 'Miles_sightings';
     const CLOUDINARY_TAG    = 'miles_sightings';
+
+    // ── Lost mode ─────────────────────────────────
+    // Toggle by editing status.json ("lostMode": true / false).
+    async function loadStatus() {
+      try {
+        const res = await fetch(`status.json?t=${Date.now()}`, { cache: 'no-store' });
+        if (!res.ok) return;
+        const data = await res.json();
+        if (data.lostMode) {
+          document.getElementById('lost-banner').style.display = 'block';
+          document.title = 'MISSING — Have you seen Miles?';
+        }
+      } catch (e) {
+        // fail silently — defaults to normal (not lost) view
+      }
+    }
+    loadStatus();
 
     // ── Photo preview ───────────────────────────
     const photoInput  = document.getElementById('photo-input');
